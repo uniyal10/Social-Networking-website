@@ -27,7 +27,7 @@ function Main() {
         <Route path="/create-post" exact>
           <CreatePost />
         </Route>
-        <Route path="/posts/:id" exact>
+        <Route path="/post/:id" exact>
           <ViewSinglePost />
         </Route>
         <Route path="/about-us">
