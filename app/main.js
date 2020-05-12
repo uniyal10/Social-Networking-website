@@ -10,6 +10,10 @@ import About from "./components/About"
 import Terms from "./components/Terms"
 import Home from "./components/Home"
 import CreatePost from "./components/CreatePost"
+import Axios from "axios"
+import ViewSinglePost from "./components/ViewSinglePost"
+
+Axios.defaults.baseURL = "http://localhost:8080"
 
 function Main() {
   const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
@@ -22,6 +26,9 @@ function Main() {
         </Route>
         <Route path="/create-post" exact>
           <CreatePost />
+        </Route>
+        <Route path="/posts/:id" exact>
+          <ViewSinglePost />
         </Route>
         <Route path="/about-us">
           <About />
