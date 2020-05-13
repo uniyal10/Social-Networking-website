@@ -1,7 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useContext } from "react"
 import Page from "./Page"
+import StateContext from "../StateContext"
 
 function ViewSinglePost() {
+  const appState = useContext(StateContext)
   return (
     <Page title="Fake Data">
       <div className="d-flex justify-content-between">
@@ -20,7 +22,7 @@ function ViewSinglePost() {
         <a href="#">
           <img className="avatar-tiny" src="https://s.gravatar.com/avatar/372327c4919cc6d8317003ee517eb0cd?s=80" />
         </a>
-        Posted by <a href="#">brad</a> on 2/10/2020
+        Posted by <a href="#">{appState.user.username}</a> on {new Date().toLocaleString()}
       </p>
 
       <div className="body-content">

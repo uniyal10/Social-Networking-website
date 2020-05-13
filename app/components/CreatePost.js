@@ -3,16 +3,18 @@ import Page from "./Page"
 import Axios from "axios"
 import { withRouter } from "react-router-dom"
 import DispatchContext from "../DispatchContext"
+import StateContext from "../StateContext"
 
 function CreatePost(props) {
   const [title, setTitle] = useState()
   const [body, setBody] = useState()
   const appDispatch = useContext(DispatchContext)
+  const appState = useContext(StateContext)
 
   async function handleSubmit(e) {
     e.preventDefault()
     try {
-      const response = await Axios.post("/create-post", { title, body, token: localStorage.getItem("complexappToken") })
+      const response = await Axios.post("/create-post", { title, body, token: appState.user.token })
       appDispatch({ type: "flashMessage", value: "Post created sucessfully" })
       props.history.push(`/post/${response.data}`)
     } catch (e) {
