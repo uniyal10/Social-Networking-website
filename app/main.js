@@ -13,6 +13,7 @@ import CreatePost from "./components/CreatePost"
 import Axios from "axios"
 import ViewSinglePost from "./components/ViewSinglePost"
 import FlashMessages from "./components/FlashMessages"
+import ExampleContext from "./ExampleContext"
 Axios.defaults.baseURL = "http://localhost:8080"
 
 function Main() {
@@ -24,28 +25,30 @@ function Main() {
   }
 
   return (
-    <BrowserRouter>
-      <FlashMessages messages={flashMessages} />
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-      <Switch>
-        <Route path="/" exact>
-          {loggedIn ? <Home /> : <HomeGuest />}
-        </Route>
-        <Route path="/create-post" exact>
-          <CreatePost addflashMessage={addflashMessage} />
-        </Route>
-        <Route path="/post/:id" exact>
-          <ViewSinglePost />
-        </Route>
-        <Route path="/about-us">
-          <About />
-        </Route>
-        <Route path="/terms">
-          <Terms />
-        </Route>
-      </Switch>
-      <Footer />
-    </BrowserRouter>
+    <ExampleContext.Provider value={{ addflashMessage, setLoggedIn }}>
+      <BrowserRouter>
+        <FlashMessages messages={flashMessages} />
+        <Header loggedIn={loggedIn} />
+        <Switch>
+          <Route path="/" exact>
+            {loggedIn ? <Home /> : <HomeGuest />}
+          </Route>
+          <Route path="/create-post" exact>
+            <CreatePost />
+          </Route>
+          <Route path="/post/:id" exact>
+            <ViewSinglePost />
+          </Route>
+          <Route path="/about-us">
+            <About />
+          </Route>
+          <Route path="/terms">
+            <Terms />
+          </Route>
+        </Switch>
+        <Footer />
+      </BrowserRouter>
+    </ExampleContext.Provider>
   )
 }
 
