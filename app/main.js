@@ -12,20 +12,27 @@ import Home from "./components/Home"
 import CreatePost from "./components/CreatePost"
 import Axios from "axios"
 import ViewSinglePost from "./components/ViewSinglePost"
-
+import FlashMessages from "./components/FlashMessages"
 Axios.defaults.baseURL = "http://localhost:8080"
 
 function Main() {
   const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
+  const [flashMessages, setFlashMessages] = useState([])
+
+  function addflashMessage(msg) {
+    setFlashMessages(prev => prev.concat(msg))
+  }
+
   return (
     <BrowserRouter>
+      <FlashMessages messages={flashMessages} />
       <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       <Switch>
         <Route path="/" exact>
           {loggedIn ? <Home /> : <HomeGuest />}
         </Route>
         <Route path="/create-post" exact>
-          <CreatePost />
+          <CreatePost addflashMessage={addflashMessage} />
         </Route>
         <Route path="/post/:id" exact>
           <ViewSinglePost />
