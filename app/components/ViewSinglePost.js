@@ -3,6 +3,8 @@ import Page from "./Page"
 import StateContext from "../StateContext"
 import { useParams, Link } from "react-router-dom"
 import Axios from "axios"
+import LoadingDotsicon from "./LodingDotsicon"
+import ReactMarkdown from "react-markdown"
 
 function ViewSinglePost() {
   const appState = useContext(StateContext)
@@ -10,19 +12,28 @@ function ViewSinglePost() {
   const [post, setPost] = useState()
   const { id } = useParams()
   useEffect(() => {
+    const outRequest = Axios.CancelToken.source()
     async function fetchPosts() {
       try {
-        const response = await Axios.get(`/post/${id}`)
+        const response = await Axios.get(`/post/${id}`, { cancelToken: outRequest.token })
         setPost(response.data)
         setLoading(false)
       } catch (e) {
-        console.log(e.response.data)
+        console.log("request not served")
       }
     }
     fetchPosts()
+    return () => {
+      outRequest.cancel()
+    }
   }, [])
 
-  if (isLoading) return <Page title="...">Loading...</Page>
+  if (isLoading)
+    return (
+      <Page title="...">
+        <LoadingDotsicon />
+      </Page>
+    )
 
   const date = new Date(post.createdDate)
   const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
@@ -47,7 +58,9 @@ function ViewSinglePost() {
         Posted by <Link to={`/profile/${post.author.username}`}>{post.author.username}</Link> on {formattedDate}
       </p>
 
-      <div className="body-content">{post.body}</div>
+      <div className="body-content">
+        <ReactMarkdown source={post.body} allowedTypes={["paragraph", "strong", "emphasis", "text", "heading", "list", "listItem"]} />
+      </div>
     </Page>
   )
 }
