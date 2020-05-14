@@ -16,6 +16,7 @@ import Axios from "axios"
 import ViewSinglePost from "./components/ViewSinglePost"
 import FlashMessages from "./components/FlashMessages"
 import Profile from "./components/Profile"
+import EditPost from "./components/EditPost"
 Axios.defaults.baseURL = "http://localhost:8080"
 
 function Main() {
@@ -72,8 +73,11 @@ function Main() {
             <Route path="/create-post" exact>
               <CreatePost />
             </Route>
-            <Route path="/post/:id">
+            <Route path="/post/:id" exact>
               <ViewSinglePost />
+            </Route>
+            <Route path="/post/:id/edit" exact>
+              <EditPost />
             </Route>
             <Route path="/about-us">
               <About />
