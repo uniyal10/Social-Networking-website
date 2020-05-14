@@ -6,6 +6,7 @@ import Axios from "axios"
 import LoadingDotsicon from "./LodingDotsicon"
 import ReactMarkdown from "react-markdown"
 import ReactTooltip from "react-tooltip"
+import NotFound from "./NotFound"
 
 function ViewSinglePost() {
   const appState = useContext(StateContext)
@@ -28,6 +29,9 @@ function ViewSinglePost() {
       ourRequest.cancel()
     }
   }, [])
+  if (!isLoading && !post) {
+    return <NotFound />
+  }
 
   if (isLoading)
     return (
