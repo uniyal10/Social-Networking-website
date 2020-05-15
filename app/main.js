@@ -4,6 +4,7 @@ import { useImmerReducer } from "use-immer"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
+import { CSSTransition } from "react-transition-group"
 //components
 import Header from "./components/Header"
 import HomeGuest from "./components/HomeGuest"
@@ -98,7 +99,9 @@ function Main() {
               <NotFound />
             </Route>
           </Switch>
-          {state.isSearchOpen ? <Search /> : ""}
+          <CSSTransition timeout={330} in={state.isSearchOpen} classNames="search-overlay" unmountOnExit>
+            <Search />
+          </CSSTransition>
           <Footer />
         </BrowserRouter>
       </DispatchContext.Provider>

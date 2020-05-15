@@ -24,7 +24,7 @@ function ProfilePosts() {
     return () => {
       outRequest.cancel()
     }
-  }, [])
+  }, [username])
   if (isLoading)
     return (
       <div>
