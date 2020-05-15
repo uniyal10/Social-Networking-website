@@ -6,6 +6,8 @@ import Axios from "axios"
 import ProfilePosts from "./ProfilePosts"
 import { useImmer } from "use-immer"
 import ProfileFollowers from "./ProfileFollowers"
+import ProfileFollowing from "./ProfileFollowing"
+
 function ComponentName() {
   const appState = useContext(StateContext)
   const { username } = useParams()
@@ -134,7 +136,9 @@ function ComponentName() {
         <Route path="/profile/:username/followers">
           <ProfileFollowers />
         </Route>
-        <Route path="/profile/:username/following"></Route>
+        <Route path="/profile/:username/following">
+          <ProfileFollowing />
+        </Route>
       </Switch>
     </Page>
   )
