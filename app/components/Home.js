@@ -5,7 +5,7 @@ import { useImmer } from "use-immer"
 import LoadingDotIcon from "./LodingDotsicon"
 import Axios from "axios"
 import { Link } from "react-router-dom"
-
+import Post from "./Post"
 function Home() {
   const appState = useContext(StateContext)
   const [state, setState] = useImmer({
@@ -42,16 +42,7 @@ function Home() {
           <h2>The Latest From Those You Follow</h2>
           <div className="list-group">
             {state.feed.map(post => {
-              const date = new Date(post.createdDate)
-              const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-              return (
-                <Link onClick={() => appDispatch({ type: "closeSearch" })} key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action">
-                  <img className="avatar-tiny" src={post.author.avatar} /> <strong>{post.body}</strong>{" "}
-                  <span className="text-muted small">
-                    by {post.author.username} on {formattedDate}
-                  </span>
-                </Link>
-              )
+              return <Post post={post} key={post._id} />
             })}
           </div>
         </>
