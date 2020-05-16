@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react"
+import React, { useState, useReducer, useEffect, Suspense } from "react"
 import ReactDOM from "react-dom"
 import { useImmerReducer } from "use-immer"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
@@ -12,15 +12,16 @@ import Footer from "./components/Footer"
 import About from "./components/About"
 import Terms from "./components/Terms"
 import Home from "./components/Home"
-import CreatePost from "./components/CreatePost"
+const CreatePost = React.lazy(() => import("./components/CreatePost"))
 import Axios from "axios"
-import ViewSinglePost from "./components/ViewSinglePost"
+const ViewSinglePost = React.lazy(() => import("./components/ViewSinglePost"))
 import FlashMessages from "./components/FlashMessages"
 import Profile from "./components/Profile"
 import EditPost from "./components/EditPost"
 import NotFound from "./components/NotFound"
-import Search from "./components/Search"
-import Chat from "./components/Chat"
+const Search = React.lazy(() => import("./components/Search"))
+const Chat = React.lazy(() => import("./components/Chat"))
+import LoadingDoticon from "./components/LodingDotsicon"
 Axios.defaults.baseURL = "http://localhost:8080"
 
 function Main() {
@@ -82,42 +83,70 @@ function Main() {
       localStorage.removeItem("complexappAvatar")
     }
   }, [state.loggedIn])
+
+  //check if token has expired or not
+  useEffect(() => {
+    if (state.loggedIn) {
+      //send axios request here
+      const ourRequest = Axios.CancelToken.source()
+      async function fetchResults() {
+        try {
+          const response = await Axios.post("/checkToken", { token: state.user.token }, { cancelToken: ourRequest.token })
+          if (!response.data) {
+            dispatch({ type: "logout" })
+            dispatch({ type: "flashMessage", value: "your session has expired. Please log in again." })
+          }
+        } catch (e) {
+          console.log("there was a problem")
+        }
+      }
+      fetchResults()
+      return () => ourRequest.cancel()
+    }
+  }, [])
+
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         <BrowserRouter>
           <FlashMessages messages={state.flashMessages} />
           <Header />
-          <Switch>
-            <Route path="/profile/:username">
-              <Profile />
-            </Route>
-            <Route path="/" exact>
-              {state.loggedIn ? <Home /> : <HomeGuest />}
-            </Route>
-            <Route path="/create-post" exact>
-              <CreatePost />
-            </Route>
-            <Route path="/post/:id" exact>
-              <ViewSinglePost />
-            </Route>
-            <Route path="/post/:id/edit" exact>
-              <EditPost />
-            </Route>
-            <Route path="/about-us">
-              <About />
-            </Route>
-            <Route path="/terms">
-              <Terms />
-            </Route>
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
+          <Suspense fallback={<LoadingDoticon />}>
+            <Switch>
+              <Route path="/profile/:username">
+                <Profile />
+              </Route>
+              <Route path="/" exact>
+                {state.loggedIn ? <Home /> : <HomeGuest />}
+              </Route>
+              <Route path="/create-post" exact>
+                <CreatePost />
+              </Route>
+              <Route path="/post/:id" exact>
+                <ViewSinglePost />
+              </Route>
+              <Route path="/post/:id/edit" exact>
+                <EditPost />
+              </Route>
+              <Route path="/about-us">
+                <About />
+              </Route>
+              <Route path="/terms">
+                <Terms />
+              </Route>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          </Suspense>
           <CSSTransition timeout={330} in={state.isSearchOpen} classNames="search-overlay" unmountOnExit>
-            <Search />
+            <div className="search-overlay">
+              <Suspense fallback="">
+                <Search />
+              </Suspense>
+            </div>
           </CSSTransition>
-          <Chat />
+          <Suspense fallback="">{state.loggedIn && <Chat />}</Suspense>
           <Footer />
         </BrowserRouter>
       </DispatchContext.Provider>
