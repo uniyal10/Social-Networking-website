@@ -25,7 +25,7 @@ function Chat() {
   }, [appState.isChatOpen])
 
   useEffect(() => {
-    socket.current = io("http://localhost:8080" || "https://oldschoolmate.herokuapp.com")
+    socket.current = io("https://oldschoolmate.herokuapp.com")
     socket.current.on("chatFromServer", message => {
       setState(draft => {
         draft.chatMessages.push(message)

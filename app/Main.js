@@ -23,7 +23,7 @@ const Search = React.lazy(() => import("./components/Search"))
 const Chat = React.lazy(() => import("./components/Chat"))
 import LoadingDoticon from "./components/LodingDotsicon"
 
-Axios.defaults.baseURL = "http://localhost:8080"|| "https://oldschoolmate.herokuapp.com"
+Axios.defaults.baseURL = "https://oldschoolmate.herokuapp.com"
 
 function Main() {
   const initialState = {
