@@ -98,9 +98,9 @@ function HomeGuest() {
         }
         return
       case "passwordAfterDelay":
-        if (draft.password.value.length < 12) {
+        if (draft.password.value.length < 8) {
           draft.password.hasErrors = true
-          draft.password.message = "password muust be at least 12 characters."
+          draft.password.message = "password must be at least 8 characters."
         }
         return
       case "submitForm":
