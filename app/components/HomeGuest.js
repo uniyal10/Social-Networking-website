@@ -92,7 +92,7 @@ function HomeGuest() {
       case "passwordImmediately":
         draft.password.hasErrors = false
         draft.password.value = action.value
-        if (draft.password.value > 50) {
+        if (draft.password.value.length > 50) {
           draft.password.hasErrors = true
           draft.password.message = "password cannot exceed 50 characters"
         }
