@@ -25,7 +25,7 @@ function Chat() {
   }, [appState.isChatOpen])
 
   useEffect(() => {
-    socket.current = io("https://oldschoolmate.herokuapp.com")
+    socket.current = io("https://backend-debeto.onrender.com")
     socket.current.on("chatFromServer", message => {
       setState(draft => {
         draft.chatMessages.push(message)
